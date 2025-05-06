@@ -1,3 +1,24 @@
-[gd_scene format=3 uid="uid://c8kpjbl40w43m"]
+[gd_scene load_steps=3 format=3 uid="uid://c8kpjbl40w43m"]
+
+[ext_resource type="PackedScene" uid="uid://bfdb5t1o7wrc8" path="res://scenes/block_map.tscn" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://44bbdjhqhk87" path="res://scripts/game.gd" id="1_yqjtg"]
 
 [node name="Game" type="Node2D"]
+script = ExtResource("1_yqjtg")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.125911, 0.125911, 0.125911, 1)
+
+[node name="MainBlockMap" parent="." instance=ExtResource("1_uwrxv")]
+unique_name_in_owner = true
+
+[node name="NextPieceBlockMap" parent="." instance=ExtResource("1_uwrxv")]
+unique_name_in_owner = true
