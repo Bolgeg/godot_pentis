@@ -101,7 +101,7 @@ var piece_time_to_fall:=1.0
 var piece_falling_time:=0.0
 var in_soft_drop:=false
 var soft_drop_time_counter:=0.0
-const SOFT_DROP_TIME:=0.1
+const SOFT_DROP_TIME:=0.05
 
 func _ready() -> void:
 	clear_block_map(main_block_map,grid_size)
@@ -129,9 +129,30 @@ func _process(_delta: float) -> void:
 	
 	
 	var block_array=main_block_array.duplicate()
+	
+	block_array.put(get_piece_shadow(),get_piece_shadow_position())
+	
 	block_array.put(piece_block_array,piece_position)
 	
 	update_block_map(main_block_map,block_array)
+
+func get_piece_shadow()->BlockArray:
+	var shadow:=piece_block_array.duplicate()
+	for y in range(shadow.size.y):
+		for x in range(shadow.size.x):
+			if shadow.types[y][x]!=-1:
+				shadow.types[y][x]=-2
+	return shadow
+	
+func get_piece_shadow_position()->Vector2i:
+	var p:=piece_position
+	if not space_in_map(piece_block_array,p):
+		return p
+	for i in range(grid_size.y):
+		if not space_in_map(piece_block_array,p+Vector2i(0,1)):
+			break
+		p+=Vector2i(0,1)
+	return p
 
 func _physics_process(delta: float) -> void:
 	if not space_in_map(piece_block_array,piece_position):
@@ -176,9 +197,33 @@ func piece_put():
 	current_piece=next_piece
 	next_piece=random_piece()
 	set_piece(current_piece)
+	
 	piece_falling_time=0
 	in_soft_drop=false
 	soft_drop_time_counter=0
+	
+	check_line_clears()
+
+func check_line_clears():
+	var y:=grid_size.y-1
+	while y>=0:
+		if is_line_full(y):
+			clear_line(y)
+		else:
+			y-=1
+
+func is_line_full(y:int):
+	for x in range(grid_size.x):
+		if main_block_array.types[y][x]==-1:
+			return false
+	return true
+
+func clear_line(line_y:int):
+	for y in range(line_y,0,-1):
+		for x in range(grid_size.x):
+			main_block_array.types[y][x]=main_block_array.types[y-1][x]
+	for x in range(grid_size.x):
+		main_block_array.types[0][x]=-1
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("move_left"):
