@@ -24,6 +24,18 @@ func put(block_array:BlockArray,offset:Vector2i):
 				if block_array.types[y][x]!=-1:
 					types[p.y][p.x]=block_array.types[y][x]
 
+func space_for(block_array:BlockArray,position:Vector2i)->bool:
+	for y in range(block_array.size.y):
+		for x in range(block_array.size.x):
+			var p:Vector2i=position+Vector2i(x,y)
+			if block_array.types[y][x]!=-1:
+				if p.x>=0 and p.y>=0 and p.x<size.x and p.y<size.y:
+					if types[p.y][p.x]!=-1:
+						return false
+				else:
+					return false
+	return true
+
 func rotated_90_square()->BlockArray:
 	var block_array=new(size)
 	for y in range(size.y):
