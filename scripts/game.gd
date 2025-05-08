@@ -6,6 +6,9 @@ const NEXT_PIECE_GRID_SIZE:=Vector2i(7,7)
 var grid_size:=Vector2i(24,20)
 @onready var main_block_map:=%MainBlockMap
 
+var score:=0
+@onready var score_label:=%ScoreLabel
+
 const PIECE_TYPES:=[
 	[
 		[1,1,1,1,1],
@@ -139,6 +142,8 @@ func _process(_delta: float) -> void:
 	block_array.put(piece_block_array,piece_position)
 	
 	update_block_map(main_block_map,block_array)
+	
+	score_label.text=str(score)
 
 func get_piece_shadow()->BlockArray:
 	var shadow:=piece_block_array.duplicate()
@@ -239,6 +244,7 @@ func clear_line(line_y:int):
 			main_block_array.types[y][x]=main_block_array.types[y-1][x]
 	for x in range(grid_size.x):
 		main_block_array.types[0][x]=-1
+	score+=1
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("move_left"):
