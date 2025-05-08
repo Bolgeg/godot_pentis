@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="godot_pentis"
-run/main_scene="uid://c8kpjbl40w43m"
+run/main_scene="uid://detq4jo62q0nu"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

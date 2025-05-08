@@ -1,5 +1,7 @@
 extends Node2D
 
+signal lost
+
 const NEXT_PIECE_GRID_SIZE:=Vector2i(7,7)
 @onready var next_piece_block_map:=%NextPieceBlockMap
 
@@ -344,4 +346,4 @@ func get_piece_block_array_rotated(piece_type:int,piece_rotation:int)->BlockArra
 	return block_array.rotated_square(piece_rotation)
 
 func lose():
-	get_tree().paused=true
+	lost.emit()
