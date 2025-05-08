@@ -103,6 +103,10 @@ var in_soft_drop:=false
 var soft_drop_time_counter:=0.0
 const SOFT_DROP_TIME:=0.05
 
+const HORIZONTAL_MOVEMENT_START_TIME:=0.2
+const HORIZONTAL_MOVEMENT_TIME:=0.05
+var horizontal_movement_time_counter:=-HORIZONTAL_MOVEMENT_START_TIME
+
 func _ready() -> void:
 	clear_block_map(main_block_map,grid_size)
 	clear_block_map(next_piece_block_map,NEXT_PIECE_GRID_SIZE)
@@ -157,6 +161,17 @@ func get_piece_shadow_position()->Vector2i:
 func _physics_process(delta: float) -> void:
 	if not space_in_map(piece_block_array,piece_position):
 		lose()
+	
+	if Input.is_action_pressed("move_left"):
+		horizontal_movement_time_counter+=delta
+		while horizontal_movement_time_counter>=HORIZONTAL_MOVEMENT_TIME:
+			horizontal_movement_time_counter-=HORIZONTAL_MOVEMENT_TIME
+			piece_move_left()
+	elif Input.is_action_pressed("move_right"):
+		horizontal_movement_time_counter+=delta
+		while horizontal_movement_time_counter>=HORIZONTAL_MOVEMENT_TIME:
+			horizontal_movement_time_counter-=HORIZONTAL_MOVEMENT_TIME
+			piece_move_right()
 	
 	var put_piece:=false
 	
@@ -230,6 +245,10 @@ func _input(_event: InputEvent) -> void:
 		piece_move_left()
 	if Input.is_action_just_pressed("move_right"):
 		piece_move_right()
+	
+	if Input.is_action_just_released("move_left") or Input.is_action_just_released("move_right"):
+		horizontal_movement_time_counter=-HORIZONTAL_MOVEMENT_START_TIME
+	
 	if Input.is_action_just_pressed("rotate"):
 		piece_rotate()
 	
